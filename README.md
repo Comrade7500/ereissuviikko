@@ -43,10 +43,16 @@ eReissuvihko on alakoulun digitaalinen järjestelmä lukujärjestysten ja poissa
 4. Suorita: `database/create_database.sql`
 5. Suorita: `database/sample_data.sql`
 
-Tai 
-mysql -u root -p < setup_database_user.sql
-mysql -u ereissuvihko_user -p  < create_database.sql
-mysql -u ereissuvihko_user -p  < sample_data.sql
+**Komentorivillä:**
+```bash
+mysql -u root -p < database/setup_database_user.sql
+mysql -u ereissuvihko_user -p < database/create_database.sql
+mysql -u ereissuvihko_user -p < database/sample_data.sql
+```
+
+**Huomio:** Tietokantaskriptit on suunniteltu kehitystä varten ja ne voidaan ajaa uudelleen turvallisesti:
+- `create_database.sql` pudottaa olemassa olevat taulut ennen uusien luomista
+- `sample_data.sql` tyhjentää olemassa olevan datan ennen uusien tietojen lisäämistä
 
 **Yksityiskohtaiset ohjeet:** Katso `database/SETUP_WINDOWS.md`
 
@@ -100,7 +106,7 @@ Sovellus on saatavilla osoitteessa: http://localhost:3000
 - **Luokka**: 1A
 
 ### Oppilas
-- **Email**: ella.virtanen@example.com
+- **Email**: ella.virtanen@oppilas.koulu.fi
 - **Nimi**: Ella Virtanen
 - **Luokka**: 1A
 
@@ -155,6 +161,20 @@ bc-reissuvihko/
 1. Muokkaa `database/create_database.sql`
 2. Päivitä `database/sample_data.sql` tarvittaessa
 3. Suorita muutokset tietokannassa
+
+**Kehitystä varten:**
+```bash
+# Päivitä tietokantarakente
+mysql -u ereissuvihko_user -p < database/create_database.sql
+
+# Päivitä testidata
+mysql -u ereissuvihko_user -p < database/sample_data.sql
+
+# Tai molemmat kerralla
+mysql -u ereissuvihko_user -p < database/create_database.sql && mysql -u ereissuvihko_user -p < database/sample_data.sql
+```
+
+**Huomio:** Skriptit voidaan ajaa uudelleen turvallisesti - ne tyhjentävät olemassa olevat tiedot automaattisesti.
 
 ## Tulevaisuuden ominaisuudet
 
