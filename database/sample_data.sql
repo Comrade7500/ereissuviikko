@@ -1,4 +1,9 @@
 -- Sample data for development
+-- This script generates sample data with dynamic dates:
+-- - Previous week (7 days before current week)
+-- - Current week (week containing the script execution date)
+-- - Next week (7 days after current week)
+-- All dates are calculated relative to when the script is run
 USE ereissuvihko;
 
 -- Insert sample teachers
@@ -21,18 +26,18 @@ INSERT INTO class (id, teacher_id) VALUES
 
 -- Insert sample students
 INSERT INTO student (name, dob, address, phone, email, class_id) VALUES
-('Ella Virtanen', '2017-03-15', 'Koulukatu 1, 00100 Helsinki', '040-1111111', 'ella.virtanen@example.com', '1A'),
-('Aapo Koskinen', '2017-07-22', 'Opiskelijankatu 5, 00100 Helsinki', '040-2222222', 'aapo.koskinen@example.com', '1A'),
-('Emma Nieminen', '2017-11-08', 'Koulukatu 10, 00100 Helsinki', '040-3333333', 'emma.nieminen@example.com', '1B'),
-('Oliver Mäkinen', '2017-01-30', 'Opiskelijankatu 15, 00100 Helsinki', '040-4444444', 'oliver.makinen@example.com', '1B'),
-('Aino Korhonen', '2016-05-12', 'Koulukatu 20, 00100 Helsinki', '040-5555555', 'aino.korhonen@example.com', '2A'),
-('Eetu Rantanen', '2016-09-18', 'Opiskelijankatu 25, 00100 Helsinki', '040-6666666', 'eetu.rantanen@example.com', '2A'),
-('Sofia Virtanen', '2016-12-03', 'Koulukatu 30, 00100 Helsinki', '040-7777777', 'sofia.virtanen@example.com', '2B'),
-('Leo Koskinen', '2016-04-25', 'Opiskelijankatu 35, 00100 Helsinki', '040-8888888', 'leo.koskinen@example.com', '2B'),
-('Luna Nieminen', '2015-08-14', 'Koulukatu 40, 00100 Helsinki', '040-9999999', 'luna.nieminen@example.com', '3A'),
-('Vilho Mäkinen', '2015-10-07', 'Opiskelijankatu 45, 00100 Helsinki', '040-1010101', 'vilho.makinen@example.com', '3A'),
-('Iida Korhonen', '2015-02-28', 'Koulukatu 50, 00100 Helsinki', '040-2020202', 'iida.korhonen@example.com', '3B'),
-('Onni Rantanen', '2015-06-11', 'Opiskelijankatu 55, 00100 Helsinki', '040-3030303', 'onni.rantanen@example.com', '3B');
+('Ella Virtanen', '2018-03-15', 'Koulukatu 1, 00100 Helsinki', '040-1111111', 'ella.virtanen@oppilas.koulu.fi', '1A'),
+('Aapo Koskinen', '2018-07-22', 'Opiskelijankatu 5, 00100 Helsinki', '040-2222222', 'aapo.koskinen@oppilas.koulu.fi', '1A'),
+('Emma Nieminen', '2018-11-08', 'Koulukatu 10, 00100 Helsinki', '040-3333333', 'emma.nieminen@oppilas.koulu.fi', '1B'),
+('Oliver Mäkinen', '2018-01-30', 'Opiskelijankatu 15, 00100 Helsinki', '040-4444444', 'oliver.makinen@oppilas.koulu.fi', '1B'),
+('Aino Korhonen', '2017-05-12', 'Koulukatu 20, 00100 Helsinki', '040-5555555', 'aino.korhonen@oppilas.koulu.fi', '2A'),
+('Eetu Rantanen', '2017-09-18', 'Opiskelijankatu 25, 00100 Helsinki', '040-6666666', 'eetu.rantanen@oppilas.koulu.fi', '2A'),
+('Sofia Virtanen', '2017-12-03', 'Koulukatu 30, 00100 Helsinki', '040-7777777', 'sofia.virtanen@oppilas.koulu.fi', '2B'),
+('Leo Koskinen', '2017-04-25', 'Opiskelijankatu 35, 00100 Helsinki', '040-8888888', 'leo.koskinen@oppilas.koulu.fi', '2B'),
+('Luna Nieminen', '2016-08-14', 'Koulukatu 40, 00100 Helsinki', '040-9999999', 'luna.nieminen@oppilas.koulu.fi', '3A'),
+('Vilho Mäkinen', '2016-10-07', 'Opiskelijankatu 45, 00100 Helsinki', '040-1010101', 'vilho.makinen@oppilas.koulu.fi', '3A'),
+('Iida Korhonen', '2016-02-28', 'Koulukatu 50, 00100 Helsinki', '040-2020202', 'iida.korhonen@oppilas.koulu.fi', '3B'),
+('Onni Rantanen', '2016-06-11', 'Opiskelijankatu 55, 00100 Helsinki', '040-3030303', 'onni.rantanen@oppilas.koulu.fi', '3B');
 
 -- Insert sample parents
 INSERT INTO parent (name, phone, email) VALUES
@@ -54,35 +59,91 @@ INSERT INTO student_parent_connection (student_id, parent_id) VALUES
 (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6),
 (7, 7), (8, 8), (9, 9), (10, 10), (11, 11), (12, 12);
 
--- Insert sample lessons for this week
+-- Insert sample lessons for previous, current, and next week
+-- Calculate Monday of current week (assuming Monday is start of week)
+SET @current_monday = DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY);
+SET @prev_monday = DATE_SUB(@current_monday, INTERVAL 7 DAY);
+SET @next_monday = DATE_ADD(@current_monday, INTERVAL 7 DAY);
+
 INSERT INTO lesson (date, start_time, end_time, subject, teacher_id, class_id) VALUES
--- Monday lessons
-('2025-01-15', '08:00', '08:45', 'Matematiikka', 1, '1A'),
-('2025-01-15', '09:00', '09:45', 'Suomi', 1, '1A'),
-('2025-01-15', '10:15', '11:00', 'Liikunta', 1, '1A'),
-('2025-01-15', '11:15', '12:00', 'Käsityö', 1, '1A'),
+-- PREVIOUS WEEK - Monday lessons
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '08:00', '08:45', 'Matematiikka', 1, '1A'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '09:00', '09:45', 'Suomi', 1, '1A'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '10:15', '11:00', 'Liikunta', 1, '1A'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '11:15', '12:00', 'Käsityö', 1, '1A'),
 
-('2025-01-15', '08:00', '08:45', 'Matematiikka', 2, '1B'),
-('2025-01-15', '09:00', '09:45', 'Suomi', 2, '1B'),
-('2025-01-15', '10:15', '11:00', 'Liikunta', 2, '1B'),
-('2025-01-15', '11:15', '12:00', 'Käsityö', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '08:00', '08:45', 'Matematiikka', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '09:00', '09:45', 'Suomi', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '10:15', '11:00', 'Liikunta', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 0 DAY), '11:15', '12:00', 'Käsityö', 2, '1B'),
 
--- Tuesday lessons
-('2025-01-16', '08:00', '08:45', 'Suomi', 1, '1A'),
-('2025-01-16', '09:00', '09:45', 'Matematiikka', 1, '1A'),
-('2025-01-16', '10:15', '11:00', 'Musiikki', 1, '1A'),
-('2025-01-16', '11:15', '12:00', 'Ympäristöoppi', 1, '1A'),
+-- PREVIOUS WEEK - Tuesday lessons
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '08:00', '08:45', 'Suomi', 1, '1A'),
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '09:00', '09:45', 'Matematiikka', 1, '1A'),
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '10:15', '11:00', 'Musiikki', 1, '1A'),
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '11:15', '12:00', 'Ympäristöoppi', 1, '1A'),
 
-('2025-01-16', '08:00', '08:45', 'Suomi', 2, '1B'),
-('2025-01-16', '09:00', '09:45', 'Matematiikka', 2, '1B'),
-('2025-01-16', '10:15', '11:00', 'Musiikki', 2, '1B'),
-('2025-01-16', '11:15', '12:00', 'Ympäristöoppi', 2, '1B');
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '08:00', '08:45', 'Suomi', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '09:00', '09:45', 'Matematiikka', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '10:15', '11:00', 'Musiikki', 2, '1B'),
+(DATE_ADD(@prev_monday, INTERVAL 1 DAY), '11:15', '12:00', 'Ympäristöoppi', 2, '1B'),
 
--- Insert sample absences
+-- CURRENT WEEK - Monday lessons
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '08:00', '08:45', 'Matematiikka', 1, '1A'),
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '09:00', '09:45', 'Suomi', 1, '1A'),
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '10:15', '11:00', 'Liikunta', 1, '1A'),
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '11:15', '12:00', 'Käsityö', 1, '1A'),
+
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '08:00', '08:45', 'Matematiikka', 2, '1B'),
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '09:00', '09:45', 'Suomi', 2, '1B'),
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '10:15', '11:00', 'Liikunta', 2, '1B'),
+(DATE_ADD(@current_monday, INTERVAL 0 DAY), '11:15', '12:00', 'Käsityö', 2, '1B'),
+
+-- CURRENT WEEK - Tuesday lessons
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '08:00', '08:45', 'Suomi', 1, '1A'),
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '09:00', '09:45', 'Matematiikka', 1, '1A'),
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '10:15', '11:00', 'Musiikki', 1, '1A'),
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '11:15', '12:00', 'Ympäristöoppi', 1, '1A'),
+
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '08:00', '08:45', 'Suomi', 2, '1B'),
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '09:00', '09:45', 'Matematiikka', 2, '1B'),
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '10:15', '11:00', 'Musiikki', 2, '1B'),
+(DATE_ADD(@current_monday, INTERVAL 1 DAY), '11:15', '12:00', 'Ympäristöoppi', 2, '1B'),
+
+-- NEXT WEEK - Monday lessons
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '08:00', '08:45', 'Matematiikka', 1, '1A'),
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '09:00', '09:45', 'Suomi', 1, '1A'),
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '10:15', '11:00', 'Liikunta', 1, '1A'),
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '11:15', '12:00', 'Käsityö', 1, '1A'),
+
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '08:00', '08:45', 'Matematiikka', 2, '1B'),
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '09:00', '09:45', 'Suomi', 2, '1B'),
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '10:15', '11:00', 'Liikunta', 2, '1B'),
+(DATE_ADD(@next_monday, INTERVAL 0 DAY), '11:15', '12:00', 'Käsityö', 2, '1B'),
+
+-- NEXT WEEK - Tuesday lessons
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '08:00', '08:45', 'Suomi', 1, '1A'),
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '09:00', '09:45', 'Matematiikka', 1, '1A'),
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '10:15', '11:00', 'Musiikki', 1, '1A'),
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '11:15', '12:00', 'Ympäristöoppi', 1, '1A'),
+
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '08:00', '08:45', 'Suomi', 2, '1B'),
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '09:00', '09:45', 'Matematiikka', 2, '1B'),
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '10:15', '11:00', 'Musiikki', 2, '1B'),
+(DATE_ADD(@next_monday, INTERVAL 1 DAY), '11:15', '12:00', 'Ympäristöoppi', 2, '1B');
+
+-- Insert sample absences (using lesson IDs from current week)
+-- Get the first lesson ID from current week Monday for class 1A
+SET @lesson1_id = (SELECT id FROM lesson WHERE date = DATE_ADD(@current_monday, INTERVAL 0 DAY) AND class_id = '1A' AND start_time = '08:00' LIMIT 1);
+-- Get the second lesson ID from current week Monday for class 1A  
+SET @lesson2_id = (SELECT id FROM lesson WHERE date = DATE_ADD(@current_monday, INTERVAL 0 DAY) AND class_id = '1A' AND start_time = '09:00' LIMIT 1);
+-- Get the first lesson ID from current week Monday for class 1B
+SET @lesson3_id = (SELECT id FROM lesson WHERE date = DATE_ADD(@current_monday, INTERVAL 0 DAY) AND class_id = '1B' AND start_time = '08:00' LIMIT 1);
+
 INSERT INTO absence (lesson_id, student_id, type, reason) VALUES
-(1, 1, 'unclear', NULL),
-(2, 3, 'with_permission', 'Lääkärikäynti'),
-(5, 2, 'without_permission', NULL);
+(@lesson1_id, 1, 'unclear', NULL),
+(@lesson2_id, 3, 'with_permission', 'Lääkärikäynti'),
+(@lesson3_id, 2, 'without_permission', NULL);
 
 -- Insert users for authentication
 INSERT INTO user (email, student_id, teacher_id, parent_id) VALUES
