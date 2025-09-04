@@ -4,7 +4,20 @@
 -- - Current week (week containing the script execution date)
 -- - Next week (7 days after current week)
 -- All dates are calculated relative to when the script is run
+-- This script can be safely rerun during development as it clears existing data first
+
 USE ereissuvihko;
+
+-- Clear existing sample data in reverse dependency order
+DELETE FROM audit_log;
+DELETE FROM message;
+DELETE FROM absence;
+DELETE FROM lesson;
+DELETE FROM student_parent;
+DELETE FROM student;
+DELETE FROM parent;
+DELETE FROM class;
+DELETE FROM teacher;
 
 -- Insert sample teachers
 INSERT INTO teacher (name, phone, email) VALUES

@@ -1,8 +1,20 @@
 -- Create database for eReissuvihko
 -- Note: This script should be run as the ereissuvihko_user after setup_database_user.sql
 -- Database and user should already be created by setup_database_user.sql
+-- This script can be safely rerun during development as it drops existing tables first
 
 USE ereissuvihko;
+
+-- Drop existing tables in reverse dependency order to avoid foreign key constraints
+DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS absence;
+DROP TABLE IF EXISTS lesson;
+DROP TABLE IF EXISTS student_parent;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS parent;
+DROP TABLE IF EXISTS class;
+DROP TABLE IF EXISTS teacher;
 
 -- Create teacher table
 CREATE TABLE teacher (
