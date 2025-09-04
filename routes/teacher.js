@@ -37,7 +37,7 @@ router.get('/dashboard', requireTeacher, async (req, res) => {
         
         // Get unread messages
         const messages = await conn.query(`
-            SELECT m.*, u.email as sender_email
+            SELECT m.id, m.subject, m.body, m.sent_at, u.email as sender_email
             FROM message m
             JOIN message_to mt ON m.id = mt.message_id
             JOIN user u ON m.sender_email = u.email
@@ -66,7 +66,7 @@ router.get('/schedules', requireTeacher, async (req, res) => {
         const conn = await req.db.getConnection();
         
         const schedules = await conn.query(`
-            SELECT l.*, t.name as teacher_name, c.id as class_id
+            SELECT l.id, l.subject, l.date, l.start_time, l.end_time, l.teacher_id, l.class_id, t.name as teacher_name
             FROM lesson l
             JOIN teacher t ON l.teacher_id = t.id
             JOIN class c ON l.class_id = c.id
@@ -143,7 +143,7 @@ router.get('/absences', requireTeacher, async (req, res) => {
         const conn = await req.db.getConnection();
         
         const absences = await conn.query(`
-            SELECT a.*, s.name as student_name, s.class_id, l.date, l.start_time, l.end_time, l.subject
+            SELECT a.id, a.student_id, a.lesson_id, a.type, a.reason, a.created_at, s.name as student_name, s.class_id, l.date, l.start_time, l.end_time, l.subject
             FROM absence a
             JOIN student s ON a.student_id = s.id
             JOIN lesson l ON a.lesson_id = l.id
@@ -172,7 +172,7 @@ router.get('/absence/add', requireTeacher, async (req, res) => {
         
         // Get students from teacher's classes
         const students = await conn.query(`
-            SELECT s.*, c.id as class_id
+            SELECT s.id, s.name, s.email, s.class_id
             FROM student s
             JOIN class c ON s.class_id = c.id
             WHERE c.teacher_id = ?
@@ -181,7 +181,7 @@ router.get('/absence/add', requireTeacher, async (req, res) => {
         
         // Get lessons for teacher's classes
         const lessons = await conn.query(`
-            SELECT l.*, c.id as class_id
+            SELECT l.id, l.subject, l.date, l.start_time, l.end_time, l.teacher_id, l.class_id
             FROM lesson l
             JOIN class c ON l.class_id = c.id
             WHERE c.teacher_id = ?
@@ -276,7 +276,7 @@ router.get('/messages', requireTeacher, async (req, res) => {
         const conn = await req.db.getConnection();
         
         const messages = await conn.query(`
-            SELECT m.*, u.email as sender_email, mt.seen_at
+            SELECT m.id, m.subject, m.body, m.sent_at, u.email as sender_email, mt.seen_at
             FROM message m
             JOIN message_to mt ON m.id = mt.message_id
             JOIN user u ON m.sender_email = u.email

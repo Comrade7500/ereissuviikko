@@ -16,7 +16,7 @@ router.get('/dashboard', requireParent, async (req, res) => {
         
         // Get parent's children
         const children = await conn.query(`
-            SELECT s.*, c.id as class_id, t.name as teacher_name
+            SELECT s.id, s.name, s.email, s.class_id, t.name as teacher_name
             FROM student s
             JOIN student_parent_connection spc ON s.id = spc.student_id
             JOIN class c ON s.class_id = c.id
@@ -38,7 +38,7 @@ router.get('/dashboard', requireParent, async (req, res) => {
         
         // Get unread messages
         const messages = await conn.query(`
-            SELECT m.*, u.email as sender_email
+            SELECT m.id, m.subject, m.body, m.sent_at, u.email as sender_email
             FROM message m
             JOIN message_to mt ON m.id = mt.message_id
             JOIN user u ON m.sender_email = u.email
@@ -79,7 +79,7 @@ router.get('/schedule/:childId', requireParent, async (req, res) => {
         
         // Get child's schedule
         const schedule = await conn.query(`
-            SELECT l.*, t.name as teacher_name, s.name as student_name, s.class_id
+            SELECT l.id, l.subject, l.date, l.start_time, l.end_time, l.teacher_id, l.class_id, t.name as teacher_name, s.name as student_name
             FROM lesson l
             JOIN teacher t ON l.teacher_id = t.id
             JOIN student s ON l.class_id = s.class_id
@@ -182,7 +182,7 @@ router.get('/messages', requireParent, async (req, res) => {
         const conn = await req.db.getConnection();
         
         const messages = await conn.query(`
-            SELECT m.*, u.email as sender_email, mt.seen_at
+            SELECT m.id, m.subject, m.body, m.sent_at, u.email as sender_email, mt.seen_at
             FROM message m
             JOIN message_to mt ON m.id = mt.message_id
             JOIN user u ON m.sender_email = u.email

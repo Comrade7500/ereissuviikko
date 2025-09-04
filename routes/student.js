@@ -20,7 +20,7 @@ router.get('/dashboard', requireStudent, async (req, res) => {
         const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
         
         const schedule = await conn.query(`
-            SELECT l.*, t.name as teacher_name, c.id as class_id
+            SELECT l.id, l.subject, l.date, l.start_time, l.end_time, l.teacher_id, l.class_id, t.name as teacher_name
             FROM lesson l
             JOIN teacher t ON l.teacher_id = t.id
             JOIN class c ON l.class_id = c.id
@@ -30,7 +30,7 @@ router.get('/dashboard', requireStudent, async (req, res) => {
         
         // Get unread messages
         const messages = await conn.query(`
-            SELECT m.*, u.email as sender_email
+            SELECT m.id, m.subject, m.body, m.sent_at, u.email as sender_email
             FROM message m
             JOIN message_to mt ON m.id = mt.message_id
             JOIN user u ON m.sender_email = u.email
@@ -84,7 +84,7 @@ router.get('/messages', requireStudent, async (req, res) => {
         const conn = await req.db.getConnection();
         
         const messages = await conn.query(`
-            SELECT m.*, u.email as sender_email, mt.seen_at
+            SELECT m.id, m.subject, m.body, m.sent_at, u.email as sender_email, mt.seen_at
             FROM message m
             JOIN message_to mt ON m.id = mt.message_id
             JOIN user u ON m.sender_email = u.email

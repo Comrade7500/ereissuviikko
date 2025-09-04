@@ -46,7 +46,7 @@ router.post('/login', async (req, res) => {
         
         if (userData.student_id) {
             const student = await conn.query(
-                'SELECT s.*, c.id as class_id FROM student s LEFT JOIN class c ON s.class_id = c.id WHERE s.id = ?',
+                'SELECT s.id, s.name, s.email, s.class_id FROM student s LEFT JOIN class c ON s.class_id = c.id WHERE s.id = ?',
                 [userData.student_id]
             );
             userInfo = { ...userData, ...student[0], userType: 'student' };

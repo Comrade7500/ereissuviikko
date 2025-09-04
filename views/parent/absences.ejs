@@ -1,4 +1,3 @@
-<%- include('../layout', { title: 'Poissaolot - eReissuvihko', body: `
 <div class="page-header">
     <h2><i class="fas fa-user-times"></i> Poissaolot</h2>
 </div>
@@ -57,7 +56,7 @@
             <div class="status-pending">
                 <i class="fas fa-exclamation-triangle"></i>
                 Odottaa kuitatusta
-                <button class="btn btn-sm btn-primary" onclick="acknowledgeAbsence(<%= absence.id %>)">
+                <button class="btn btn-sm btn-primary" onclick="acknowledgeAbsence('<%= absence.id %>')">
                     Kuitata poissaolo
                 </button>
             </div>
@@ -68,9 +67,9 @@
 </div>
 <% } else { %>
 <div class="no-data">
-    <i class="fas fa-user-check"></i>
+    <i class="fas fa-user-times"></i>
     <h3>Ei poissaoloja</h3>
-    <p>Lapsellasi ei ole poissaoloja.</p>
+    <p>Poissaoloja ei ole vielä rekisteröity.</p>
 </div>
 <% } %>
 
@@ -80,30 +79,3 @@
         Takaisin etusivulle
     </a>
 </div>
-
-<script>
-function acknowledgeAbsence(absenceId) {
-    const reason = prompt('Selitys poissaololle (valinnainen):');
-    
-    fetch('/parent/absence/' + absenceId + '/acknowledge', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reason: reason })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert('Virhe: ' + data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Virhe poissaolon kuitatessa');
-    });
-}
-</script>
-` }) %>
