@@ -73,7 +73,7 @@ Muokkaa `.env` tiedostoa:
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=ereissuvihko_user
-DB_PASSWORD=SecureAppPassword2024!
+DB_PASSWORD=SecureAppPassword2025!
 DB_NAME=ereissuvihko
 SESSION_SECRET=your_very_secure_session_secret_here_change_this_in_production
 PORT=3000

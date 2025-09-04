@@ -2,7 +2,7 @@
 -- Run this as root user to create the application database user
 
 -- Create dedicated database user for the application
-CREATE USER IF NOT EXISTS 'ereissuvihko_user'@'localhost' IDENTIFIED BY 'SecureAppPassword2024!';
+CREATE USER IF NOT EXISTS 'ereissuvihko_user'@'localhost' IDENTIFIED BY 'SecureAppPassword2025!';
 
 -- Create the database
 CREATE DATABASE IF NOT EXISTS ereissuvihko CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

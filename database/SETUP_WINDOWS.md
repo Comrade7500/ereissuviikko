@@ -21,7 +21,7 @@ This guide provides step-by-step instructions to set up the eReissuvihko databas
    Or copy and paste the contents of `database/setup_database_user.sql`
 
 ### Step 2: Create Database Schema
-1. Connect as the new user `ereissuvihko_user` with password `SecureAppPassword2024!`
+1. Connect as the new user `ereissuvihko_user` with password `SecureAppPassword2025!`
 2. Run:
    ```sql
    source database/create_database.sql
@@ -45,7 +45,7 @@ This guide provides step-by-step instructions to set up the eReissuvihko databas
 ### Step 2: Create Schema
 1. Create a new connection with:
    - Username: `ereissuvihko_user`
-   - Password: `SecureAppPassword2024!`
+   - Password: `SecureAppPassword2025!`
    - Database: `ereissuvihko`
 2. Open `database/create_database.sql`
 3. Execute the script
@@ -63,7 +63,7 @@ This guide provides step-by-step instructions to set up the eReissuvihko databas
 4. Set:
    - Username: `ereissuvihko_user`
    - Host name: `Local`
-   - Password: `SecureAppPassword2024!`
+   - Password: `SecureAppPassword2025!`
 5. In "Database for user account" section:
    - Check "Create database with same name and grant all privileges"
    - Database name: `ereissuvihko`
@@ -87,17 +87,17 @@ After setup, verify everything works:
 
 1. **Test connection:**
    ```cmd
-   mysql -u ereissuvihko_user -p"SecureAppPassword2024!" -e "SELECT 1;"
+   mysql -u ereissuvihko_user -p"SecureAppPassword2025!" -e "SELECT 1;"
    ```
 
 2. **Check tables:**
    ```cmd
-   mysql -u ereissuvihko_user -p"SecureAppPassword2024!" -e "USE ereissuvihko; SHOW TABLES;"
+   mysql -u ereissuvihko_user -p"SecureAppPassword2025!" -e "USE ereissuvihko; SHOW TABLES;"
    ```
 
 3. **Check sample data:**
    ```cmd
-   mysql -u ereissuvihko_user -p"SecureAppPassword2024!" -e "USE ereissuvihko; SELECT COUNT(*) FROM student;"
+   mysql -u ereissuvihko_user -p"SecureAppPassword2025!" -e "USE ereissuvihko; SELECT COUNT(*) FROM student;"
    ```
 
 ## Environment Configuration
@@ -108,7 +108,7 @@ After successful database setup, update your `.env` file:
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=ereissuvihko_user
-DB_PASSWORD=SecureAppPassword2024!
+DB_PASSWORD=SecureAppPassword2025!
 DB_NAME=ereissuvihko
 ```
 
@@ -146,7 +146,7 @@ If you encounter issues:
 
 ## Security Notes
 
-- The password `SecureAppPassword2024!` is for development only
+- The password `SecureAppPassword2025!` is for development only
 - Change it in production
 - The application user has limited permissions (only on the ereissuvihko database)
 - Consider using SSL connections in production
