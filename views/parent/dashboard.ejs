@@ -1,0 +1,152 @@
+<%- include('../layout', { title: 'Huoltajan etusivu - eReissuvihko', body: `
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h2><i class="fas fa-user-friends"></i> Tervetuloa, <%= user.name %>!</h2>
+        <p>Huoltaja</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-child"></i> Lapset</h3>
+            </div>
+            <div class="card-content">
+                <% if (children && children.length > 0) { %>
+                <div class="children-list">
+                    <% children.forEach(function(child) { %>
+                    <div class="child-item">
+                        <div class="child-name">
+                            <%= child.name %>
+                        </div>
+                        <div class="child-class">
+                            Luokka: <%= child.class_id %>
+                        </div>
+                        <div class="child-teacher">
+                            Opettaja: <%= child.teacher_name %>
+                        </div>
+                        <div class="child-actions">
+                            <a href="/parent/schedule/<%= child.id %>" class="btn btn-sm btn-outline">
+                                <i class="fas fa-calendar-alt"></i>
+                                Lukujärjestys
+                            </a>
+                            <a href="/parent/absences/<%= child.id %>" class="btn btn-sm btn-outline">
+                                <i class="fas fa-user-times"></i>
+                                Poissaolot
+                            </a>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei lapsia rekisteröity</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-times"></i> Viimeisimmät poissaolot</h3>
+            </div>
+            <div class="card-content">
+                <% if (absences && absences.length > 0) { %>
+                <div class="absence-list">
+                    <% absences.slice(0, 5).forEach(function(absence) { %>
+                    <div class="absence-item">
+                        <div class="absence-student">
+                            <%= absence.student_name %>
+                        </div>
+                        <div class="absence-details">
+                            <%= absence.subject %> - <%= new Date(absence.date).toLocaleDateString('fi-FI') %>
+                        </div>
+                        <div class="absence-type type-<%= absence.type %>">
+                            <% if (absence.type === 'unclear') { %>
+                            Selvittämätön
+                            <% } else if (absence.type === 'with_permission') { %>
+                            Luvallinen
+                            <% } else { %>
+                            Luvaton
+                            <% } %>
+                        </div>
+                        <% if (!absence.seen_by_parent_at) { %>
+                        <div class="absence-acknowledge">
+                            <button class="btn btn-sm btn-primary" onclick="acknowledgeAbsence(<%= absence.id %>)">
+                                Kuitata
+                            </button>
+                        </div>
+                        <% } %>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei poissaoloja</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-envelope"></i> Uudet viestit</h3>
+                <a href="/parent/messages" class="btn btn-outline btn-sm">Näytä kaikki</a>
+            </div>
+            <div class="card-content">
+                <% if (messages && messages.length > 0) { %>
+                <div class="message-list">
+                    <% messages.slice(0, 3).forEach(function(message) { %>
+                    <div class="message-item">
+                        <div class="message-subject">
+                            <%= message.subject %>
+                        </div>
+                        <div class="message-sender">
+                            Lähettäjä: <%= message.sender_email %>
+                        </div>
+                        <div class="message-time">
+                            <%= new Date(message.sent_at).toLocaleDateString('fi-FI') %>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei uusia viestejä</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dashboard-actions">
+        <a href="/parent/messages" class="btn btn-primary">
+            <i class="fas fa-envelope"></i>
+            Viestit
+        </a>
+        <a href="/parent/messages/send" class="btn btn-secondary">
+            <i class="fas fa-paper-plane"></i>
+            Lähetä viesti
+        </a>
+    </div>
+</div>
+
+<script>
+function acknowledgeAbsence(absenceId) {
+    const reason = prompt('Selitys poissaololle (valinnainen):');
+    
+    fetch('/parent/absence/' + absenceId + '/acknowledge', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reason: reason })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Virhe: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Virhe poissaolon kuitatessa');
+    });
+}
+</script>
+` }) %>

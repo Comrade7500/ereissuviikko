@@ -1,0 +1,73 @@
+<%- include('../layout', { title: 'Lukujärjestykset - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-calendar-alt"></i> Lukujärjestykset</h2>
+    <a href="/teacher/schedule/add" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        Lisää lukujärjestys
+    </a>
+</div>
+
+<% if (schedules && schedules.length > 0) { %>
+<div class="schedules-container">
+    <% 
+    // Group lessons by date and class
+    const lessonsByDateAndClass = {};
+    schedules.forEach(function(lesson) {
+        const key = lesson.date + '_' + lesson.class_id;
+        if (!lessonsByDateAndClass[key]) {
+            lessonsByDateAndClass[key] = {
+                date: lesson.date,
+                class_id: lesson.class_id,
+                lessons: []
+            };
+        }
+        lessonsByDateAndClass[key].lessons.push(lesson);
+    });
+    
+    // Sort by date
+    const sortedSchedules = Object.values(lessonsByDateAndClass).sort((a, b) => new Date(a.date) - new Date(b.date));
+    %>
+    
+    <% sortedSchedules.forEach(function(scheduleGroup) { %>
+    <div class="schedule-day">
+        <div class="day-header">
+            <h3>
+                <%= new Date(scheduleGroup.date).toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'long' }) %>
+                - Luokka <%= scheduleGroup.class_id %>
+            </h3>
+        </div>
+        <div class="day-lessons">
+            <% scheduleGroup.lessons.sort((a, b) => a.start_time.localeCompare(b.start_time)).forEach(function(lesson) { %>
+            <div class="lesson-item">
+                <div class="lesson-time">
+                    <%= lesson.start_time %> - <%= lesson.end_time %>
+                </div>
+                <div class="lesson-details">
+                    <div class="lesson-subject">
+                        <%= lesson.subject %>
+                    </div>
+                    <div class="lesson-teacher">
+                        Opettaja: <%= lesson.teacher_name %>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+    <% }); %>
+</div>
+<% } else { %>
+<div class="no-data">
+    <i class="fas fa-calendar-times"></i>
+    <h3>Ei lukujärjestyksiä</h3>
+    <p>Lukujärjestyksiä ei ole vielä määritelty.</p>
+</div>
+<% } %>
+
+<div class="page-actions">
+    <a href="/teacher/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+` }) %>

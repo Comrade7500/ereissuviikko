@@ -1,0 +1,124 @@
+<%- include('../layout', { title: 'Opettajan etusivu - eReissuvihko', body: `
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h2><i class="fas fa-chalkboard-teacher"></i> Tervetuloa, <%= user.name %>!</h2>
+        <p>Opettaja</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-users"></i> Luokkani</h3>
+                <a href="/teacher/schedules" class="btn btn-outline btn-sm">Lukujärjestykset</a>
+            </div>
+            <div class="card-content">
+                <% if (classes && classes.length > 0) { %>
+                <div class="class-list">
+                    <% classes.forEach(function(cls) { %>
+                    <div class="class-item">
+                        <div class="class-name">
+                            <%= cls.id %>
+                        </div>
+                        <div class="class-student-count">
+                            <%= cls.student_count %> oppilasta
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei luokkia</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-times"></i> Viimeisimmät poissaolot</h3>
+                <a href="/teacher/absences" class="btn btn-outline btn-sm">Näytä kaikki</a>
+            </div>
+            <div class="card-content">
+                <% if (absences && absences.length > 0) { %>
+                <div class="absence-list">
+                    <% absences.slice(0, 5).forEach(function(absence) { %>
+                    <div class="absence-item">
+                        <div class="absence-student">
+                            <%= absence.student_name %>
+                        </div>
+                        <div class="absence-details">
+                            <%= absence.subject %> - <%= new Date(absence.date).toLocaleDateString('fi-FI') %>
+                        </div>
+                        <div class="absence-type type-<%= absence.type %>">
+                            <% if (absence.type === 'unclear') { %>
+                            Selvittämätön
+                            <% } else if (absence.type === 'with_permission') { %>
+                            Luvallinen
+                            <% } else { %>
+                            Luvaton
+                            <% } %>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei poissaoloja</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-envelope"></i> Uudet viestit</h3>
+                <a href="/teacher/messages" class="btn btn-outline btn-sm">Näytä kaikki</a>
+            </div>
+            <div class="card-content">
+                <% if (messages && messages.length > 0) { %>
+                <div class="message-list">
+                    <% messages.slice(0, 3).forEach(function(message) { %>
+                    <div class="message-item">
+                        <div class="message-subject">
+                            <%= message.subject %>
+                        </div>
+                        <div class="message-sender">
+                            Lähettäjä: <%= message.sender_email %>
+                        </div>
+                        <div class="message-time">
+                            <%= new Date(message.sent_at).toLocaleDateString('fi-FI') %>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei uusia viestejä</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dashboard-actions">
+        <a href="/teacher/schedules" class="btn btn-primary">
+            <i class="fas fa-calendar-alt"></i>
+            Lukujärjestykset
+        </a>
+        <a href="/teacher/schedule/add" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Lisää lukujärjestys
+        </a>
+        <a href="/teacher/absences" class="btn btn-primary">
+            <i class="fas fa-user-times"></i>
+            Poissaolot
+        </a>
+        <a href="/teacher/absence/add" class="btn btn-secondary">
+            <i class="fas fa-plus"></i>
+            Lisää poissaolo
+        </a>
+        <a href="/teacher/messages" class="btn btn-primary">
+            <i class="fas fa-envelope"></i>
+            Viestit
+        </a>
+        <a href="/teacher/messages/send" class="btn btn-secondary">
+            <i class="fas fa-paper-plane"></i>
+            Lähetä viesti
+        </a>
+    </div>
+</div>
+` }) %>

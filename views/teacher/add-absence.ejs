@@ -1,0 +1,70 @@
+<%- include('../layout', { title: 'Lisää poissaolo - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-plus"></i> Lisää poissaolo</h2>
+</div>
+
+<form method="POST" action="/teacher/absence/add" class="absence-form">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="student_id">Oppilas</label>
+            <select id="student_id" name="student_id" required>
+                <option value="">Valitse oppilas</option>
+                <% students.forEach(function(student) { %>
+                <option value="<%= student.id %>">
+                    <%= student.name %> (<%= student.class_id %>)
+                </option>
+                <% }); %>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="lesson_id">Oppitunti</label>
+            <select id="lesson_id" name="lesson_id" required>
+                <option value="">Valitse oppitunti</option>
+                <% lessons.forEach(function(lesson) { %>
+                <option value="<%= lesson.id %>">
+                    <%= new Date(lesson.date).toLocaleDateString('fi-FI') %> - 
+                    <%= lesson.start_time %>-<%= lesson.end_time %> - 
+                    <%= lesson.subject %> (<%= lesson.class_id %>)
+                </option>
+                <% }); %>
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="type">Poissaolon tyyppi</label>
+            <select id="type" name="type" required>
+                <option value="unclear">Selvittämätön</option>
+                <option value="with_permission">Luvallinen</option>
+                <option value="without_permission">Luvaton</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="reason">Selitys (valinnainen)</label>
+            <input type="text" id="reason" name="reason" 
+                   placeholder="esim. Sairas, lääkärikäynti">
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Lisää poissaolo
+        </button>
+        <a href="/teacher/absences" class="btn btn-outline">
+            <i class="fas fa-times"></i>
+            Peruuta
+        </a>
+    </div>
+</form>
+
+<div class="page-actions">
+    <a href="/teacher/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+` }) %>

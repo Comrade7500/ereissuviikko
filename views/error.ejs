@@ -1,0 +1,17 @@
+<%- include('layout', { title: 'Virhe - eReissuvihko', body: `
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2><%= error %></h2>
+        <% if (typeof message !== 'undefined' && message) { %>
+        <p><%= message %></p>
+        <% } %>
+        <a href="/" class="btn btn-primary">
+            <i class="fas fa-home"></i>
+            Takaisin etusivulle
+        </a>
+    </div>
+</div>
+` }) %>

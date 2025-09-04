@@ -1,0 +1,81 @@
+<%- include('../layout', { title: 'Oppilaan etusivu - eReissuvihko', body: `
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h2><i class="fas fa-home"></i> Tervetuloa, <%= user.name %>!</h2>
+        <p>Luokka: <%= user.class_id %></p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-calendar-alt"></i> Tämän viikon lukujärjestys</h3>
+                <a href="/student/schedule" class="btn btn-outline btn-sm">Näytä kaikki</a>
+            </div>
+            <div class="card-content">
+                <% if (schedule && schedule.length > 0) { %>
+                <div class="schedule-list">
+                    <% schedule.forEach(function(lesson) { %>
+                    <div class="schedule-item">
+                        <div class="schedule-date">
+                            <%= new Date(lesson.date).toLocaleDateString('fi-FI', { weekday: 'short', day: 'numeric', month: 'short' }) %>
+                        </div>
+                        <div class="schedule-time">
+                            <%= lesson.start_time %> - <%= lesson.end_time %>
+                        </div>
+                        <div class="schedule-subject">
+                            <%= lesson.subject %>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei lukujärjestystä tälle viikolle</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3><i class="fas fa-envelope"></i> Uudet viestit</h3>
+                <a href="/student/messages" class="btn btn-outline btn-sm">Näytä kaikki</a>
+            </div>
+            <div class="card-content">
+                <% if (messages && messages.length > 0) { %>
+                <div class="message-list">
+                    <% messages.slice(0, 3).forEach(function(message) { %>
+                    <div class="message-item">
+                        <div class="message-subject">
+                            <%= message.subject %>
+                        </div>
+                        <div class="message-sender">
+                            Lähettäjä: <%= message.sender_email %>
+                        </div>
+                        <div class="message-time">
+                            <%= new Date(message.sent_at).toLocaleDateString('fi-FI') %>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <p class="no-data">Ei uusia viestejä</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dashboard-actions">
+        <a href="/student/schedule" class="btn btn-primary">
+            <i class="fas fa-calendar-alt"></i>
+            Lukujärjestys
+        </a>
+        <a href="/student/messages" class="btn btn-primary">
+            <i class="fas fa-envelope"></i>
+            Viestit
+        </a>
+        <a href="/student/messages/send" class="btn btn-secondary">
+            <i class="fas fa-paper-plane"></i>
+            Lähetä viesti
+        </a>
+    </div>
+</div>
+` }) %>

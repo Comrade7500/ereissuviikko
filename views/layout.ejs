@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'eReissuvihko' %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    eReissuvihko
+                </h1>
+                <% if (typeof user !== 'undefined' && user) { %>
+                <nav class="nav">
+                    <div class="nav-user">
+                        <span class="user-info">
+                            <i class="fas fa-user"></i>
+                            <%= user.name %>
+                            <span class="user-type">(<%= user.userType === 'student' ? 'Oppilas' : user.userType === 'teacher' ? 'Opettaja' : 'Huoltaja' %>)</span>
+                        </span>
+                        <a href="/logout" class="btn btn-outline">Kirjaudu ulos</a>
+                    </div>
+                </nav>
+                <% } %>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <%= error %>
+                <% if (typeof message !== 'undefined' && message) { %>
+                <br><small><%= message %></small>
+                <% } %>
+            </div>
+            <% } %>
+            
+            <%- body %>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 eReissuvihko - Alakoulun digitaalinen järjestelmä</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

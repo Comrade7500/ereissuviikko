@@ -1,0 +1,52 @@
+<%- include('../layout', { title: 'Viestit - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-envelope"></i> Viestit</h2>
+    <a href="/parent/messages/send" class="btn btn-primary">
+        <i class="fas fa-paper-plane"></i>
+        Lähetä viesti
+    </a>
+</div>
+
+<% if (messages && messages.length > 0) { %>
+<div class="messages-container">
+    <% messages.forEach(function(message) { %>
+    <div class="message-card <%= !message.seen_at ? 'unread' : '' %>" data-message-id="<%= message.id %>">
+        <div class="message-header">
+            <div class="message-subject">
+                <%= message.subject %>
+            </div>
+            <div class="message-meta">
+                <span class="message-sender">
+                    <i class="fas fa-user"></i>
+                    <%= message.sender_email %>
+                </span>
+                <span class="message-time">
+                    <i class="fas fa-clock"></i>
+                    <%= new Date(message.sent_at).toLocaleString('fi-FI') %>
+                </span>
+                <% if (!message.seen_at) { %>
+                <span class="unread-badge">Uusi</span>
+                <% } %>
+            </div>
+        </div>
+        <div class="message-body">
+            <%= message.body.replace(/\\n/g, '<br>') %>
+        </div>
+    </div>
+    <% }); %>
+</div>
+<% } else { %>
+<div class="no-data">
+    <i class="fas fa-envelope-open"></i>
+    <h3>Ei viestejä</h3>
+    <p>Sinulla ei ole vielä viestejä.</p>
+</div>
+<% } %>
+
+<div class="page-actions">
+    <a href="/parent/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+` }) %>

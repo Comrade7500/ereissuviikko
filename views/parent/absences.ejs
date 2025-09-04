@@ -1,0 +1,109 @@
+<%- include('../layout', { title: 'Poissaolot - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-user-times"></i> Poissaolot</h2>
+</div>
+
+<% if (absences && absences.length > 0) { %>
+<div class="absences-container">
+    <% absences.forEach(function(absence) { %>
+    <div class="absence-card">
+        <div class="absence-header">
+            <div class="absence-student">
+                <i class="fas fa-user"></i>
+                <%= absence.student_name %>
+            </div>
+            <div class="absence-type type-<%= absence.type %>">
+                <% if (absence.type === 'unclear') { %>
+                <i class="fas fa-question-circle"></i>
+                Selvittämätön
+                <% } else if (absence.type === 'with_permission') { %>
+                <i class="fas fa-check-circle"></i>
+                Luvallinen
+                <% } else { %>
+                <i class="fas fa-times-circle"></i>
+                Luvaton
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="absence-details">
+            <div class="absence-lesson">
+                <i class="fas fa-book"></i>
+                <%= absence.subject %>
+            </div>
+            <div class="absence-date">
+                <i class="fas fa-calendar"></i>
+                <%= new Date(absence.date).toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'long' }) %>
+            </div>
+            <div class="absence-time">
+                <i class="fas fa-clock"></i>
+                <%= absence.start_time %> - <%= absence.end_time %>
+            </div>
+        </div>
+        
+        <% if (absence.reason) { %>
+        <div class="absence-reason">
+            <strong>Selitys:</strong> <%= absence.reason %>
+        </div>
+        <% } %>
+        
+        <div class="absence-status">
+            <% if (absence.seen_by_parent_at) { %>
+            <div class="status-acknowledged">
+                <i class="fas fa-check"></i>
+                Kuitattu: <%= new Date(absence.seen_by_parent_at).toLocaleString('fi-FI') %>
+            </div>
+            <% } else { %>
+            <div class="status-pending">
+                <i class="fas fa-exclamation-triangle"></i>
+                Odottaa kuitatusta
+                <button class="btn btn-sm btn-primary" onclick="acknowledgeAbsence(<%= absence.id %>)">
+                    Kuitata poissaolo
+                </button>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <% }); %>
+</div>
+<% } else { %>
+<div class="no-data">
+    <i class="fas fa-user-check"></i>
+    <h3>Ei poissaoloja</h3>
+    <p>Lapsellasi ei ole poissaoloja.</p>
+</div>
+<% } %>
+
+<div class="page-actions">
+    <a href="/parent/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+
+<script>
+function acknowledgeAbsence(absenceId) {
+    const reason = prompt('Selitys poissaololle (valinnainen):');
+    
+    fetch('/parent/absence/' + absenceId + '/acknowledge', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reason: reason })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Virhe: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Virhe poissaolon kuitatessa');
+    });
+}
+</script>
+` }) %>

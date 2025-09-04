@@ -1,0 +1,51 @@
+<%- include('../layout', { title: 'Lähetä viesti - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-paper-plane"></i> Lähetä viesti</h2>
+</div>
+
+<form method="POST" action="/teacher/messages/send" class="message-form">
+    <div class="form-group">
+        <label for="recipients">Vastaanottajat</label>
+        <select id="recipients" name="recipients" multiple required class="multi-select">
+            <% recipients.forEach(function(recipient) { %>
+            <option value="<%= recipient.email %>">
+                <%= recipient.student_name || recipient.parent_name %> 
+                (<%= recipient.student_name ? 'Oppilas' : 'Huoltaja' %>) - 
+                <%= recipient.email %>
+            </option>
+            <% }); %>
+        </select>
+        <small class="form-help">Pidä Ctrl-näppäintä pohjassa valitaksesi useita vastaanottajia</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="subject">Otsikko</label>
+        <input type="text" id="subject" name="subject" required 
+               placeholder="Viestin otsikko">
+    </div>
+    
+    <div class="form-group">
+        <label for="body">Viesti</label>
+        <textarea id="body" name="body" rows="8" required 
+                  placeholder="Kirjoita viestisi tähän..."></textarea>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i>
+            Lähetä viesti
+        </button>
+        <a href="/teacher/messages" class="btn btn-outline">
+            <i class="fas fa-times"></i>
+            Peruuta
+        </a>
+    </div>
+</form>
+
+<div class="page-actions">
+    <a href="/teacher/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+` }) %>

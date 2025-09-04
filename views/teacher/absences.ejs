@@ -1,0 +1,111 @@
+<%- include('../layout', { title: 'Poissaolot - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-user-times"></i> Poissaolot</h2>
+    <a href="/teacher/absence/add" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        Lisää poissaolo
+    </a>
+</div>
+
+<% if (absences && absences.length > 0) { %>
+<div class="absences-container">
+    <% absences.forEach(function(absence) { %>
+    <div class="absence-card">
+        <div class="absence-header">
+            <div class="absence-student">
+                <i class="fas fa-user"></i>
+                <%= absence.student_name %>
+            </div>
+            <div class="absence-class">
+                <i class="fas fa-users"></i>
+                Luokka: <%= absence.class_id %>
+            </div>
+            <div class="absence-type type-<%= absence.type %>">
+                <% if (absence.type === 'unclear') { %>
+                <i class="fas fa-question-circle"></i>
+                Selvittämätön
+                <% } else if (absence.type === 'with_permission') { %>
+                <i class="fas fa-check-circle"></i>
+                Luvallinen
+                <% } else { %>
+                <i class="fas fa-times-circle"></i>
+                Luvaton
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="absence-details">
+            <div class="absence-lesson">
+                <i class="fas fa-book"></i>
+                <%= absence.subject %>
+            </div>
+            <div class="absence-date">
+                <i class="fas fa-calendar"></i>
+                <%= new Date(absence.date).toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'long' }) %>
+            </div>
+            <div class="absence-time">
+                <i class="fas fa-clock"></i>
+                <%= absence.start_time %> - <%= absence.end_time %>
+            </div>
+        </div>
+        
+        <% if (absence.reason) { %>
+        <div class="absence-reason">
+            <strong>Selitys:</strong> <%= absence.reason %>
+        </div>
+        <% } %>
+        
+        <div class="absence-status">
+            <% if (absence.seen_by_parent_at) { %>
+            <div class="status-acknowledged">
+                <i class="fas fa-check"></i>
+                Kuitattu huoltajalta: <%= new Date(absence.seen_by_parent_at).toLocaleString('fi-FI') %>
+            </div>
+            <% } else { %>
+            <div class="status-pending">
+                <i class="fas fa-exclamation-triangle"></i>
+                Odottaa huoltajan kuitatusta
+            </div>
+            <% } %>
+        </div>
+        
+        <div class="absence-actions">
+            <form method="POST" action="/teacher/absence/<%= absence.id %>/update" class="inline-form">
+                <select name="type" class="form-control-sm">
+                    <option value="unclear" <%= absence.type === 'unclear' ? 'selected' : '' %>>Selvittämätön</option>
+                    <option value="with_permission" <%= absence.type === 'with_permission' ? 'selected' : '' %>>Luvallinen</option>
+                    <option value="without_permission" <%= absence.type === 'without_permission' ? 'selected' : '' %>>Luvaton</option>
+                </select>
+                <input type="text" name="reason" placeholder="Selitys" value="<%= absence.reason || '' %>" class="form-control-sm">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fas fa-save"></i>
+                    Päivitä
+                </button>
+            </form>
+            
+            <form method="POST" action="/teacher/absence/<%= absence.id %>/delete" class="inline-form" 
+                  onsubmit="return confirm('Haluatko varmasti poistaa tämän poissaolon?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Poista
+                </button>
+            </form>
+        </div>
+    </div>
+    <% }); %>
+</div>
+<% } else { %>
+<div class="no-data">
+    <i class="fas fa-user-check"></i>
+    <h3>Ei poissaoloja</h3>
+    <p>Ei poissaoloja rekisteröity.</p>
+</div>
+<% } %>
+
+<div class="page-actions">
+    <a href="/teacher/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+` }) %>

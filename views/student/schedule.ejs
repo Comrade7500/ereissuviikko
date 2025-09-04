@@ -1,0 +1,63 @@
+<%- include('../layout', { title: 'Lukujärjestys - eReissuvihko', body: `
+<div class="page-header">
+    <h2><i class="fas fa-calendar-alt"></i> Lukujärjestys</h2>
+    <p>Luokka: <%= user.class_id %></p>
+</div>
+
+<% if (schedule && schedule.length > 0) { %>
+<div class="schedule-container">
+    <% 
+    // Group lessons by date
+    const lessonsByDate = {};
+    schedule.forEach(function(lesson) {
+        const date = lesson.date;
+        if (!lessonsByDate[date]) {
+            lessonsByDate[date] = [];
+        }
+        lessonsByDate[date].push(lesson);
+    });
+    
+    // Sort dates
+    const sortedDates = Object.keys(lessonsByDate).sort();
+    %>
+    
+    <% sortedDates.forEach(function(date) { %>
+    <div class="schedule-day">
+        <div class="day-header">
+            <h3><%= new Date(date).toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'long' }) %></h3>
+        </div>
+        <div class="day-lessons">
+            <% lessonsByDate[date].forEach(function(lesson) { %>
+            <div class="lesson-item">
+                <div class="lesson-time">
+                    <%= lesson.start_time %> - <%= lesson.end_time %>
+                </div>
+                <div class="lesson-details">
+                    <div class="lesson-subject">
+                        <%= lesson.subject %>
+                    </div>
+                    <div class="lesson-teacher">
+                        Opettaja: <%= lesson.teacher_name %>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+    <% }); %>
+</div>
+<% } else { %>
+<div class="no-data">
+    <i class="fas fa-calendar-times"></i>
+    <h3>Ei lukujärjestystä</h3>
+    <p>Lukujärjestystä ei ole vielä määritelty.</p>
+</div>
+<% } %>
+
+<div class="page-actions">
+    <a href="/student/dashboard" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Takaisin etusivulle
+    </a>
+</div>
+` }) %>
