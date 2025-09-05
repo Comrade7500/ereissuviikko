@@ -13,11 +13,22 @@ DELETE FROM audit_log;
 DELETE FROM message;
 DELETE FROM absence;
 DELETE FROM lesson;
-DELETE FROM student_parent;
+DELETE FROM student_parent_connection;
 DELETE FROM student;
 DELETE FROM parent;
 DELETE FROM class;
 DELETE FROM teacher;
+
+-- Reset auto-increment counters to start from 1
+ALTER TABLE teacher AUTO_INCREMENT = 1;
+ALTER TABLE class AUTO_INCREMENT = 1;
+ALTER TABLE student AUTO_INCREMENT = 1;
+ALTER TABLE parent AUTO_INCREMENT = 1;
+ALTER TABLE lesson AUTO_INCREMENT = 1;
+ALTER TABLE absence AUTO_INCREMENT = 1;
+ALTER TABLE message AUTO_INCREMENT = 1;
+ALTER TABLE user AUTO_INCREMENT = 1;
+ALTER TABLE audit_log AUTO_INCREMENT = 1;
 
 -- Insert sample teachers
 INSERT INTO teacher (name, phone, email) VALUES
@@ -200,12 +211,12 @@ INSERT INTO user (email, student_id, teacher_id, parent_id) VALUES
 INSERT INTO message (sender_email, subject, body) VALUES
 ('anna.virtanen@koulu.fi', 'Tervetuloa uuteen lukuvuoteen!', 'Rakkaat oppilaat ja huoltajat! Tervetuloa uuteen lukuvuoteen. Olen iloinen, että pääsen opettamaan teitä tänä vuonna.'),
 ('marja.virtanen@example.com', 'Kysymys matematiikan kotitehtävistä', 'Hei! Minulla on kysymys matematiikan kotitehtävistä. Voitteko auttaa?'),
-('ella.virtanen@example.com', 'Kiitos opettajalle', 'Kiitos hyvästä oppitunnista!');
+('ella.virtanen@oppilas.koulu.fi', 'Kiitos opettajalle', 'Kiitos hyvästä oppitunnista!');
 
 -- Insert message recipients
 INSERT INTO message_to (message_id, recipient_email) VALUES
-(1, 'ella.virtanen@example.com'),
-(1, 'aapo.koskinen@example.com'),
+(1, 'ella.virtanen@oppilas.koulu.fi'),
+(1, 'aapo.koskinen@oppilas.koulu.fi'),
 (1, 'marja.virtanen@example.com'),
 (1, 'jari.koskinen@example.com'),
 (2, 'anna.virtanen@koulu.fi'),
