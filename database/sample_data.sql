@@ -161,18 +161,18 @@ INSERT INTO absence (lesson_id, student_id, type, reason) VALUES
 -- Insert users for authentication
 INSERT INTO user (email, student_id, teacher_id, parent_id) VALUES
 -- Students
-('ella.virtanen@example.com', 1, NULL, NULL),
-('aapo.koskinen@example.com', 2, NULL, NULL),
-('emma.nieminen@example.com', 3, NULL, NULL),
-('oliver.makinen@example.com', 4, NULL, NULL),
-('aino.korhonen@example.com', 5, NULL, NULL),
-('eetu.rantanen@example.com', 6, NULL, NULL),
-('sofia.virtanen@example.com', 7, NULL, NULL),
-('leo.koskinen@example.com', 8, NULL, NULL),
-('luna.nieminen@example.com', 9, NULL, NULL),
-('vilho.makinen@example.com', 10, NULL, NULL),
-('iida.korhonen@example.com', 11, NULL, NULL),
-('onni.rantanen@example.com', 12, NULL, NULL),
+('ella.virtanen@oppilas.koulu.fi', 1, NULL, NULL),
+('aapo.koskinen@oppilas.koulu.fi', 2, NULL, NULL),
+('emma.nieminen@oppilas.koulu.fi', 3, NULL, NULL),
+('oliver.makinen@oppilas.koulu.fi', 4, NULL, NULL),
+('aino.korhonen@oppilas.koulu.fi', 5, NULL, NULL),
+('eetu.rantanen@oppilas.koulu.fi', 6, NULL, NULL),
+('sofia.virtanen@oppilas.koulu.fi', 7, NULL, NULL),
+('leo.koskinen@oppilas.koulu.fi', 8, NULL, NULL),
+('luna.nieminen@oppilas.koulu.fi', 9, NULL, NULL),
+('vilho.makinen@oppilas.koulu.fi', 10, NULL, NULL),
+('iida.korhonen@oppilas.koulu.fi', 11, NULL, NULL),
+('onni.rantanen@oppilas.koulu.fi', 12, NULL, NULL),
 
 -- Teachers
 ('anna.virtanen@koulu.fi', NULL, 1, NULL),
