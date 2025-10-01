@@ -8,7 +8,11 @@
         <div class="dashboard-card">
             <div class="card-header">
                 <h3><i class="fas fa-users"></i> Luokkani</h3>
-                <a href="/teacher/schedules" class="btn btn-outline btn-sm">Lukujärjestykset</a>
+                <%if (classes && classes.length > 0) { %>
+                    <a href="/teacher/schedules/<%= classes[0].id %>" class="btn btn-outline btn-sm">Lukujärjestykseni</a>
+                <% } else { %>
+                    <a href="/teacher/schedules" class="btn btn-outline btn-sm">Lukujärjestykset</a>
+                <% } %>
             </div>
             <div class="card-content">
                 <% if (classes && classes.length > 0) { %>

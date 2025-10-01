@@ -86,6 +86,34 @@ router.get('/schedules', requireTeacher, async (req, res) => {
     }
 });
 
+// One classschedules view
+router.get('/schedules/:classId', requireTeacher, async (req, res) => {
+    try {
+        const classId = req.params.classId;
+        const conn = await req.db.getConnection();
+        
+        const schedules = await conn.query(`
+            SELECT l.id, l.subject, l.date, l.start_time, l.end_time, l.teacher_id, l.class_id, t.name as teacher_name
+            FROM lesson l
+            JOIN teacher t ON l.teacher_id = t.id
+            JOIN class c ON l.class_id = c.id
+            WHERE l.class_id = ?
+            ORDER BY l.date, l.start_time
+        `, [classId]);
+        
+        conn.release();
+        
+        res.render('teacher/schedules', {
+            user: req.session.user,
+            schedules: schedules
+        });
+        
+    } catch (error) {
+        console.error('Teacher schedules error:', error);
+        res.render('error', { error: 'Virhe lukujärjestysten lataamisessa' });
+    }
+});
+
 // Add schedule
 router.get('/schedule/add', requireTeacher, async (req, res) => {
     try {
