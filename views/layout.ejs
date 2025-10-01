@@ -11,10 +11,12 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <h1 class="logo">
-                    <i class="fas fa-graduation-cap"></i>
-                    eReissuvihko
-                </h1>
+                <a href="<%= typeof user !== 'undefined' && user ? (user.userType === 'student' ? '/student/dashboard' : user.userType === 'teacher' ? '/teacher/dashboard' : '/parent/dashboard') : '/login' %>">
+                    <h1 class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        eReissuvihko
+                    </h1>    
+                </a>
                 <% if (typeof user !== 'undefined' && user) { %>
                 <nav class="nav">
                     <div class="nav-user">

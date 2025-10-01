@@ -44,6 +44,18 @@ body {
     font-size: 2rem;
 }
 
+/* Logo link styling */
+.header a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+.header a:hover {
+    text-decoration: none;
+    color: #1e3a8a;
+}
+
 .nav-user {
     display: flex;
     align-items: center;
