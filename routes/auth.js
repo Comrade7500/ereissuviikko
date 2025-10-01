@@ -20,8 +20,9 @@ router.get('/login', (req, res) => {
 // Login process (email-based, no password)
 router.post('/login', async (req, res) => {
     const { email } = req.body;
+    const trimmedEmail = email.trim();
     
-    if (!email) {
+    if (!trimmedEmail) {
         return res.render('login', { error: 'Sähköpostiosoite on pakollinen' });
     }
     
@@ -31,7 +32,7 @@ router.post('/login', async (req, res) => {
         // Find user by email
         const user = await conn.query(
             'SELECT * FROM user WHERE email = ?',
-            [email]
+            [trimmedEmail]
         );
         
         if (user.length === 0) {
