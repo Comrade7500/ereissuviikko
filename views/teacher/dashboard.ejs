@@ -43,21 +43,27 @@
                 <% if (absences && absences.length > 0) { %>
                 <div class="absence-list">
                     <% absences.slice(0, 5).forEach(function(absence) { %>
-                    <div class="absence-item">
-                        <div class="absence-student">
+                    <div class="absence-item" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;overflow:hidden;">
+                        <div class="absence-student" style="flex:1;min-width:0;">
                             <%= absence.student_name %>
                         </div>
-                        <div class="absence-details">
-                            <%= absence.subject %> - <%= new Date(absence.date).toLocaleDateString('fi-FI') %>
-                        </div>
-                        <div class="absence-type type-<%= absence.type %>">
-                            <% if (absence.type === 'unclear') { %>
-                            Selvittämätön
-                            <% } else if (absence.type === 'with_permission') { %>
-                            Luvallinen
-                            <% } else { %>
-                            Luvaton
-                            <% } %>
+                        <!-- Muutettu: tunnin aihe ja päivämäärä eri riveille, tilatieto alapuolella ja siirretty 20px vasemmalle -->
+                        <div class="absence-meta" style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;">
+                            <div class="absence-subject" style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                <%= absence.subject %>
+                            </div>
+                            <div class="absence-date" style="text-align:right;color:#666;font-size:0.9em;">
+                                <%= new Date(absence.date).toLocaleDateString('fi-FI') %>
+                            </div>
+                            <div class="absence-type type-<%= absence.type %>" style="margin-right:20px;margin-top:6px;">
+                                <% if (absence.type === 'unclear') { %>
+                                Selvittämätön
+                                <% } else if (absence.type === 'with_permission') { %>
+                                Luvallinen
+                                <% } else { %>
+                                Luvaton
+                                <% } %>
+                            </div>
                         </div>
                     </div>
                     <% }); %>
