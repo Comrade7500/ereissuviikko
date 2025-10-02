@@ -108,8 +108,8 @@
     </a>
 </div>
 
-<style>
 
+<style>
 #confirm-delete-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 2000; }
 #confirm-delete-modal[aria-hidden="false"] { display: flex; }
 #confirm-delete-modal .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
@@ -142,9 +142,7 @@
         if (!delBtn) return;
         e.preventDefault();
         currentForm = delBtn.closest('form.delete-form');
-
         modal.setAttribute('aria-hidden', 'false');
-
         yesBtn.focus();
     });
 
@@ -161,7 +159,6 @@
     noBtn.addEventListener('click', function(){
         hideModal();
     });
-
 
     modal.addEventListener('click', function(e){
         if (e.target.classList.contains('modal-backdrop')) hideModal();
