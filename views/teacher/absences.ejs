@@ -82,9 +82,9 @@
                 </button>
             </form>
             
-            <form method="POST" action="/teacher/absence/<%= absence.id %>/delete" class="inline-form" 
-                  onsubmit="return confirm('Haluatko varmasti poistaa tämän poissaolon?')">
-                <button type="submit" class="btn btn-sm btn-danger">
+            <!-- Muutettu: Poista-painike avaa modaalin varmistuksen (ei alert) -->
+            <form method="POST" action="/teacher/absence/<%= absence.id %>/delete" class="inline-form delete-form" data-absence-id="<%= absence.id %>">
+                <button type="button" class="btn btn-sm btn-danger btn-delete" data-absence-id="<%= absence.id %>">
                     <i class="fas fa-trash"></i>
                     Poista
                 </button>
@@ -107,3 +107,64 @@
         Takaisin etusivulle
     </a>
 </div>
+
+
+<style>
+#confirm-delete-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 2000; }
+#confirm-delete-modal[aria-hidden="false"] { display: flex; }
+#confirm-delete-modal .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+#confirm-delete-modal .modal-dialog { position: relative; background: #fff; padding: 1.25rem; border-radius: 6px; max-width: 420px; width: 90%; box-shadow: 0 6px 18px rgba(0,0,0,0.2); z-index: 2010; }
+#confirm-delete-modal .modal-actions { margin-top: 1rem; text-align: right; }
+#confirm-delete-modal .modal-actions .btn { margin-left: 0.5rem; }
+</style>
+
+<div id="confirm-delete-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="confirm-delete-title">
+    <div class="modal-backdrop" tabindex="-1"></div>
+    <div class="modal-dialog" role="document" aria-describedby="confirm-delete-desc">
+        <h3 id="confirm-delete-title">Poista poissaolo</h3>
+        <p id="confirm-delete-desc">Haluatko varmasti poistaa tämän poissaolon?</p>
+        <div class="modal-actions">
+            <button id="confirm-delete-no" class="btn btn-outline" type="button">Ei</button>
+            <button id="confirm-delete-yes" class="btn btn-danger" type="button">Kyllä</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function(){
+    var modal = document.getElementById('confirm-delete-modal');
+    var yesBtn = document.getElementById('confirm-delete-yes');
+    var noBtn = document.getElementById('confirm-delete-no');
+    var currentForm = null;
+
+    document.addEventListener('click', function(e){
+        var delBtn = e.target.closest('.btn-delete');
+        if (!delBtn) return;
+        e.preventDefault();
+        currentForm = delBtn.closest('form.delete-form');
+        modal.setAttribute('aria-hidden', 'false');
+        yesBtn.focus();
+    });
+
+    function hideModal(){
+        modal.setAttribute('aria-hidden', 'true');
+        currentForm = null;
+    }
+
+    yesBtn.addEventListener('click', function(){
+        if (currentForm) currentForm.submit();
+        hideModal();
+    });
+
+    noBtn.addEventListener('click', function(){
+        hideModal();
+    });
+
+    modal.addEventListener('click', function(e){
+        if (e.target.classList.contains('modal-backdrop')) hideModal();
+    });
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') hideModal();
+    });
+})();
+</script>
